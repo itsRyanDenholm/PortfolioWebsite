@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: Scam Shield | Ryan Denholm</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary: #61dafb;
+            --secondary: #2a6496;
+            --dark: #121212;
+            --light: #f8f9fa;
+            --text: #e0e0e0;
+            --background: #121212;
+            --card-bg: rgba(30, 30, 30, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .blob-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: float 30s infinite ease-in-out;
+        }
+
+        #blob1 { animation-duration: 35s; }
+        #blob2 { animation-duration: 28s; }
+        #blob3 { animation-duration: 32s; }
+
+        @keyframes float {
+          0%   { transform: translate(0,    0   ); }
+          33%  { transform: translate(30px, -30px); }
+          66%  { transform: translate(-30px, 30px ); }
+          100% { transform: translate(0,    0   ); }
+        }
+
+        #blob1 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #61dafb, #2a6496);
+            top: 20%;
+            left: 10%;
+        }
+
+        #blob2 {
+            width: 450px;
+            height: 450px;
+            background: linear-gradient(135deg, #9c61fb, #6496fa);
+            bottom: 10%;
+            right: 15%;
+        }
+
+        #blob3 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #fb61b7, #967ad9);
+            bottom: 40%;
+            left: 60%;
+        }
+
+        header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(25, 25, 25, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .project-hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .project-title {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .project-subtitle {
+            font-size: 1.5rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+
+        .project-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            background-color: rgba(97, 218, 251, 0.2);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .project-overview {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: inset 0 0 0 3px rgb(41, 41, 41), 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .project-overview h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .project-overview p {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .project-sections {
+            display: grid;
+            gap: 3rem;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: inset 0 0 0 3px rgb(41, 41, 41), 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: inset 0 0 0 3px rgba(97, 218, 251, 0.3), 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .subsection {
+            margin-bottom: 2rem;
+        }
+
+        .subsection h4 {
+            color: var(--secondary);
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+        }
+
+        .subsection p, .subsection li {
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .subsection ul {
+            margin-left: 1.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .metric-card {
+            background: rgba(97, 218, 251, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+        }
+
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            color: #f8f8f2;
+        }
+
+        .image-placeholder {
+            background: #2a2a2a;
+            border: 2px dashed #555;
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            color: #777;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 5rem 1rem 1rem;
+            }
+
+            .section-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Blobs -->
+    <div class="blob-container">
+        <div class="blob" id="blob1"></div>
+        <div class="blob" id="blob2"></div>
+        <div class="blob" id="blob3"></div>
+    </div>
+
+    <!-- Header with Navbar -->
+    <header>
+        <div class="header-name">Ryan Denholm</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#development">Development</a></li>
+                <li><a href="#deployment">Deployment</a></li>
+                <li><a href="#results">Results</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <a href="index.html" class="back-link">
+            ← Back to Portfolio
+        </a>
+
+        <!-- Project Hero Section -->
+        <div class="project-hero">
+            <h1 class="project-title">Scam Shield</h1>
+            <p class="project-subtitle">AI-Powered Phishing Detection Browser Extension</p>
+            <div class="project-tags">
+                <span class="tag">Machine Learning</span>
+                <span class="tag">TensorFlow</span>
+                <span class="tag">Python</span>
+                <span class="tag">NLP</span>
+                <span class="tag">Firefox Extension</span>
+                <span class="tag">LSTM</span>
+            </div>
+        </div>
+
+        <!-- Project Overview -->
+        <div id="overview" class="project-overview">
+            <h2>Project Overview</h2>
+            <p>Scam Shield is my Honours Project (Graded as an A), the brief was to develop an ML model to detect phshing emails and deploy it into the browser for user interaction.</p>
+            <p>An LSTM was decided upon due to it's proven ability to reliably detect textual patterns, ideal for phishing emails. Development was undertaken in the TensorFlow framework, due to it's easy conversion to TensorFlow.js for future deployment.</p>
+        </div>
+
+        <!-- Project Sections -->
+        <div class="project-sections">
+            <!-- Core Concepts -->
+            <div class="section-card">
+                <h3 class="section-title">
+                    <div class="section-icon"></div>
+                    Core Concepts
+                </h3>
+                
+                <div class="subsection">
+                    <h4>Machine Learning Architecture</h4>
+                    <p>The project utilises Long Short-Term Memory (LSTM) networks, a specialised type of recurrent neural network particularly effective for sequential data processing. This architecture is ideal for analyzing URL patterns and text content that characterize phishing attempts.</p>
+                    <ul>
+                        <li>LSTM networks for sequential pattern recognition</li>
+                        <li>Natural Language Processing for content analysis</li>
+                        <li>Feature extraction from page content</li>
+                        <li>Real-time classification with sub-second response times</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h4>Privacy-First Design</h4>
+                    <p>All processing occurs locally on the user's device, ensuring that sensitive browsing data never leaves their own browser. This approach addresses critical privacy concerns while maintaining the effectiveness of the security solution.</p>
+                </div>
+            </div>
+
+            <!-- Development & Testing -->
+            <div id="development" class="section-card">
+                <h3 class="section-title">
+                    <div class="section-icon"></div>
+                    Development & Testing
+                </h3>
+                
+                <div class="subsection">
+                    <h4>Model Development</h4>
+                    <p>The LSTM model was developed using TensorFlow and trained on a comprehensive dataset of legitimate and phishing websites. The development process involved extensive experimentation with different architectures and hyperparameters.</p>
+                    
+                    <div class="code-block">
+# Example model architecture
+model = Sequential([
+    Embedding(vocab_size, 128),
+    LSTM(64, return_sequences=True),
+    Dropout(0.5),
+    LSTM(32),
+    Dense(1, activation='sigmoid')
+])
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h4>Training Process</h4>
+                    <ul>
+                        <li>Dataset preprocessing and feature engineering</li>
+                        <li>Cross-validation with stratified sampling</li>
+                        <li>Hyperparameter optimisation using stastical analysis</li>
+                        <li>Model validation on unseen test data</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h4>Performance Metrics</h4>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-value">98%</span>
+                            <div class="metric-label">Accuracy</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">97.6%</span>
+                            <div class="metric-label">Precision</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">99%</span>
+                            <div class="metric-label">Recall</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">98.3%</span>
+                            <div class="metric-label">F1 Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deployment -->
+            <div id="deployment" class="section-card">
+                <h3 class="section-title">
+                    <div class="section-icon"></div>
+                    Deployment & Integration
+                </h3>
+                
+                <div class="subsection">
+                    <h4>Firefox Extension Development</h4>
+                    <p>The trained model was integrated into a Firefox browser extension using TensorFlow.js, allowing for seamless client-side execution without requiring external API calls or server dependencies.</p>
+                    
+                    <div class="image-placeholder">
+                        <img src="extension.png" alt="Scam Shield Extension Screenshot" style="max-width: 100%; height: auto;">
+                        <br>Browser → Content Script → ML Model → User Alert
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h4>Technical Implementation</h4>
+                    <ul>
+                        <li>Model conversion to TensorFlow.js format</li>
+                        <li>Web Scraping HTML for email body</li>
+                        <li>Real-time content monitoring</li>
+                        <li>Non-intrusive user notification system</li>
+                        <li>Performance optimisation for browser compatibility</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h4>User Experience Design</h4>
+                    <p>The extension was designed to be as non-intrusive as possible, only alerting users when Scam Shield believes there is a high probability of an email being phishing (>80%). A banner is displayed beside sender information detailing probability for all emails.</p>
+                </div>
+            </div>
+
+            <!-- User Testing & Results -->
+            <div id="results" class="section-card">
+                <h3 class="section-title">
+                    <div class="section-icon"></div>
+                    User Testing & Results
+                </h3>
+                
+                <div class="subsection">
+                    <h4>Testing Methodology</h4>
+                    <p>Users were asked to detect phishing emails with and without the aid of Scam Shield, after which they were to rate their own percieved confidence of their ability to detect phishing attempts. SUS was used to evaluate the tools actual usability and impact on the user. </p>
+                </div>
+
+                <div class="subsection">
+                    <h4>Key Findings</h4>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-value">10% </span>
+                            <div class="metric-label">Mean participant scores increased by 10% when Scam Shield was used</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">15% </span>
+                            <div class="metric-label">Confidence improved by 15% on average</div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">86.6 </span>
+                            <div class="metric-label">Mean SUS Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h4>Impact Assessment</h4>
+                    <ul>
+                        <li>Participants were 10% more likely to spot phishing emails with Scam Shield.</li>
+                        <li>The average participant's confidence in spotting phishing attempts increased by 15% when using Scam Shield.</li>
+                        <li>Participants strongly agreed with postiive usability statements like "easy to use", while strongly disagreeing with negative statements such as "unnecessarirly complex".</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h4>Future Enhancements</h4>
+                    <p>I am planning on retraining the model on a newer dataset, and add the option for users to report emails as phishing. This will allow the model to remain useful against current phishing techniques.</p>
+                </div>
+            </div>
+             <div id="results" class="section-card">
+                <h3 class="section-title">
+                    <div class="section-icon"></div>
+                    Full Project Report
+                </h3>
+                <div class="subsection">
+                    <h4>Dissertation</h4>
+                    <p>Since this project was my honours project, I wrote my dissertation based on the work done. I will provide my full dissertation here for those who are interested in reading it. </p>
+                    <div class="pdf-container" style="width: 100%; height: 1200px; margin-top: 1rem;">
+                        <iframe
+                            src="report.pdf"
+                            style="width: 100%; height: 100%; border: none;"
+                        ></iframe>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animate sections on scroll
+        gsap.from('.section-card', {
+            opacity: 0,
+            y: 50,
+            stagger: 0.2,
+            duration: 0.8,
+            scrollTrigger: {
+                trigger: '.project-sections',
+                start: 'top 70%',
+                once: true
+            }
+        });
+
+        // Animate metrics
+        gsap.from('.metric-card', {
+            opacity: 0,
+            scale: 0.8,
+            stagger: 0.1,
+            duration: 0.6,
+            scrollTrigger: {
+                trigger: '.metrics-grid',
+                start: 'top 80%',
+                once: true
+            }
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

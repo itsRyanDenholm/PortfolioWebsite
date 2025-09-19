@@ -616,6 +616,7 @@
         <nav>
             <ul>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="blogs.html">Blog</a></li>
                 <li><a href="#tools">Tools</a></li>
                 <li><a href="#learning">Learning</a></li>
                 <li><a href="#contact">Contact Me</a></li>
@@ -644,7 +645,7 @@
         </div>
         <div class="projects-container">
             <!-- Project 1 -->
-            <div class="project-card">
+            <div class="project-card" onclick="window.location.href='scamshield.html';" style="cursor: pointer;">
                 <h3 class="project-title">Scam Shield</h3>
                 <div class="project-skills">
                     <span class="skill-tag">Machine Learning</span>
@@ -775,6 +776,14 @@
                     <div class="tool-item">
                         Snort
                         <span class="tool-proficiency">Intermediate</span>
+                    </div>
+                    <div class="tool-item">
+                        Event Viewer (Sysmon)
+                        <span class="tool-proficiency">Intermediate</span>
+                    </div>
+                    <div class="tool-item">
+                        KQL 
+                        <span class="tool-proficiency">Basic</span>
                     </div>
                 </div>
             </div>
@@ -1073,18 +1082,26 @@
                 }
             });
             
-            // Smooth scroll for nav links
+            
+            // Smooth scroll for on‐page anchors only
             document.querySelectorAll('nav a').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+
+                    // If the link is not an anchor link, do nothing
+                    if (!href.startsWith('#')) {
+                        return;
+                    }
+
                     e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    
+                    const targetSection = document.querySelector(href);
+                    if (!targetSection) return; // (just in case the ID is missing)
+
                     window.scrollTo({
                         top: targetSection.offsetTop - 80,
                         behavior: 'smooth'
-                    });
                 });
+            });
             });
         });
     </script>
